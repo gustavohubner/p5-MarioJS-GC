@@ -15,7 +15,7 @@ class Player {
         this.breaking = 0.9
         this.accel = 0.05
 
-        this.jumpLock = false
+        this.jumpLock = true
 
         this.speed = 2.5
 
