@@ -1,6 +1,8 @@
 let qt;
+let qtEnemies;
 let bound
 let allObjects = [];
+let enemies = []
 let player;
 
 let blocks;
@@ -10,6 +12,8 @@ let x;
 
 let debug = false;
 let gap;
+
+let gravity
 
 function preload() {
 
@@ -32,7 +36,8 @@ function preload() {
         loadImage('sprites/clouds2.png'),
         loadImage('sprites/clouds3.png'),
         loadImage('sprites/castle.png'),
-        loadImage('sprites/pole.png')
+        loadImage('sprites/pole.png'),
+        loadImage('sprites/goomba.png')
 
     ]
     mario = loadImage('sprites/marioSheet.png')
@@ -42,6 +47,7 @@ function preload() {
 function setup() {
 
 
+    gravity = createVector(0, 0.1);
     let renderer = createCanvas(320, 240);
     renderer.parent("p5js");
     adjust()
@@ -64,8 +70,10 @@ function setup() {
 }
 let start = false;
 
+let mPoint
+let mPoint2
+let range
 function draw() {
-    player.update()
 
 
     translate(floor(-player.x - 8 + width / 2), 8)
@@ -77,115 +85,40 @@ function draw() {
     background(92, 148, 252);
 
     qt = new QuadTree(bound, 4, null);
+    qtEnemies = new QuadTree(bound, 4, null);
+    qtEnemies.batchInsert(enemies)
     qt.batchInsert(allObjects)
 
-
     rectMode(CORNER);
-    let range = new Rect(player.x, player.y, 32, 32);
-    // let range2 = new Rect(player.x, player.y, 2, 2);
-    // let pnt = new Rect((int)((mouseX + 8) / 16) * 16, (int)((mouseY + 8) / 16) * 16, 16, 16)
+    range = new Rect(player.x, player.y, 32, 32);
+    
     let pnt = new Sprite(x, (int)((mouseX + 16 + player.x - width / 2) / 16) * 16, (int)((mouseY) / 16) * 16, blocks[x].width, blocks[x].height)
-    // pnt.opacity = 127;
-
     let pnt2 = new Rect((int)((mouseX + 16 + player.x - width / 2) / 16) * 16, (int)((mouseY) / 16) * 16, 16, 16)
-
+    if (x == 18)
+        pnt = new Sprite(x, (int)((mouseX + 16 + player.x - width / 2) / 16) * 16, (int)((mouseY) / 16) * 16, blocks[x].width, blocks[x].height)
     qt.draw()
     stroke("green");
 
-    let mPoint = new Point(player.x, player.y) //player
-    let mPoint2 = new Point(player.x, player.y - 1) // player jump collider
+    mPoint = new Point(player.x, player.y) //player
+    mPoint2 = new Point(player.x, player.y - 1) // player jump collider
 
     strokeWeight(1);
 
-    let objects = qt.query(range);
+
     pnt.draw()
     pnt2.draw("green")
 
 
-    player.move_u = true;
-    player.move_d = true;
-    player.move_l = true;
-    player.move_r = true;
+    // player.checkCollisions(qt)
+    // player.checkCollisions(qtEnemies)
 
-    if (objects != null) {
-        // console.log(objects.length)
-        for (let p of objects) {
-            if (p instanceof Sprite) {
-                if (p.intersects(range))
-                    stroke("green");
-                if (p.contains(mPoint)) {
-                    stroke("red");
-                    if (p.contains(mPoint2)) {
-                        // console.log(abs(p.x - player.x),abs(p.y - player.y))
+    // if (start) {
+    //     if (player.move_d) player.applyForce(gravity);
+    // }
 
-
-                        if (p.y < player.y && abs(p.x - player.x) < 10 && ((player.y - p.y) < 15) && (player.y - p.y) > 0) {
-                            player.move_u = false
-                            player.vel.y = 0
-                            player.y += (16 - abs(player.y - p.y));
-                            player.y++;
-                            // stroke("orange");
-                            // strokeWeight(5)
-                            // point(p.x, p.y)
-                            // console.log("up")
-                            continue
-
-                        }
-
-
-                    }
-
-                    if ((p.y >= player.y) && (abs(p.x - player.x) < 15) && (abs(p.y - player.y) <= 16) && (abs(p.y - player.y) > 8)) {
-                        player.move_d = false;
-                        player.jumpLock = false
-                        player.vel.y = 0
-                        player.y -= abs(16 - (p.y - player.y))
-                        // player.y--
-                        // console.log("down")
-                        continue
-                    }
-
-                    if ((p.x < player.x) && (abs(player.x - p.x) <= 16) && (abs(p.y - player.y) < 15)) {
-                        player.move_l = false;
-                        player.vel.x = 0
-                        player.x += (16 - abs(player.x - p.x))
-
-                        // console.log("l")
-                        continue
-                        // player.x++;
-                    }
-                    if ((p.x > player.x) && (abs(player.x - p.x) <= 16) && (abs(p.y - player.y) < 15)) {
-                        player.move_r = false;
-                        player.vel.x = 0
-                        player.x -= (16 - abs(player.x - p.x))
-
-                        // console.log("r")
-
-                        continue
-                        // player.x--;
-                    }
-
-                    // strokeWeight(5)
-                    // point(p.x, p.y)
-                }
-
-
-                // strokeWeight(1)
-                // rectMode(CENTER);
-                // rect(p.x, p.y, p.w, p.h)
-            }
-        }
-    }
-
-    if (start) {
-        let gravity = createVector(0, 0.1);
-        if (player.move_d) player.applyForce(gravity);
-    }
-
-
-    // console.log(player.move_l, player.move_r)
-
+    qtEnemies.draw()
     player.draw()
+    player.update()
 
     if (mouseIsPressed === true) {
         // console.log(mouseY,)
@@ -196,7 +129,15 @@ function draw() {
                 if (result != null) {
                     index = allObjects.indexOf(result[0]);
                     if (index > -1) {
-                        allObjects.splice(index, 1); // 2nd parameter means remove one item only
+                        allObjects.splice(index, 1);
+                    }
+                }
+
+                result = qtEnemies.query(new Rect((int)((mouseX + 16 + player.x - width / 2) / 16) * 16, (int)((mouseY) / 16) * 16, 7, 7))
+                if (result != null) {
+                    index = enemies.indexOf(result[0]);
+                    if (index > -1) {
+                        enemies.splice(index, 1);
                     }
                 }
             }
@@ -211,13 +152,8 @@ function draw() {
                 touchControl.right = true
                 touchControl.up = false
             } else {
-
-                // touchControl.left = false
-                // touchControl.right = false
                 touchControl.up = true
-
             }
-
         }
     } else {
         touchControl.left = false
@@ -231,9 +167,15 @@ function draw() {
 function keyPressed() {
     start = true;
 }
+
 function mouseClicked(event) {
     if (mouseY < height) {
-        if (x > 7) {
+        if (x == 18) {
+            print('enemy')
+            pnt = new Enemy(x, (int)((mouseX + 16 + player.x - width / 2) / 16) * 16, (int)((mouseY) / 16) * 16, 16, 16)
+            enemies.push(pnt)
+            return false
+        } else if (x > 7) {
             print("background")
             pnt = new BackgroundSprite(x, (int)((mouseX + 16 + player.x - width / 2) / 16) * 16, (int)((mouseY) / 16) * 16, blocks[x].width, blocks[x].height)
         } else
@@ -250,16 +192,26 @@ function saveLevel() {
         // console.log(e.x,e.y)
         out.push([e.x, e.y, e.sprite])
     })
+
+    enemies.forEach(function (e) {
+        // console.log(e.x,e.y)
+        out.push([e.x, e.y, e.sprite])
+    })
     // console.log(JSON.stringify(out))
     return JSON.stringify(out);
 }
 
 function loadLevel(level) {
     allObjects = []
+    enemies = []
     arr = JSON.parse(level)
 
     arr.forEach(function (e) {
-        if (e[2] > 7)
+        if (e[2] == 18) {
+            pnt = new Enemy(e[2], (int)(e[0] / 16) * 16, (int)(e[1] / 16) * 16, 16,16)
+            enemies.push(pnt)
+            return
+        } else if (e[2] > 7)
             pnt = new BackgroundSprite(e[2], (int)(e[0] / 16) * 16, (int)(e[1] / 16) * 16, blocks[e[2]].width, blocks[e[2]].height)
         else
             pnt = new Sprite(e[2], (int)(e[0] / 16) * 16, (int)(e[1] / 16) * 16, blocks[e[2]].width, blocks[e[2]].height)
@@ -269,15 +221,11 @@ function loadLevel(level) {
 }
 
 function mouseWheel(event) {
-
     if (event.delta > 0)
         x = (x + 1) % blocks.length
     else
         x = (x - 1) % blocks.length
-
     x = x < 0 ? blocks.length - 1 : x
-    // print(x)
-
 }
 
 let touchControl = {
