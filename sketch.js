@@ -8,7 +8,7 @@ let mario
 
 let x;
 
-let debug = false;
+let debug = true;
 let gap;
 
 function preload() {
@@ -29,7 +29,9 @@ function preload() {
         loadImage('sprites/bush3.png'),
         loadImage('sprites/clouds.png'),
         loadImage('sprites/clouds2.png'),
-        loadImage('sprites/clouds3.png')
+        loadImage('sprites/clouds3.png'),
+        loadImage('sprites/castle.png'),
+        loadImage('sprites/pole.png')
 
     ]
     mario = loadImage('sprites/marioSheet.png')
@@ -37,16 +39,17 @@ function preload() {
 
 
 function setup() {
+
     createCanvas(320, 240);
     // scale()
 
-    gap = -10
+    gap = 0
     x = 0
 
 
 
 
-    bound = new Rect((width - (gap / 2)) / 2, (height - (gap / 2)) / 2, (width + gap) / 2, (height + gap) / 2);
+    bound = new Rect((width - (gap / 2)) / 2, (height -16 + (gap / 2)) / 2, (width+ 100+ gap) / 2, (height + gap) / 2);
     player = new Player(width / 2, height / 2);
 
 
@@ -55,6 +58,7 @@ function setup() {
 let start = false;
 
 function draw() {
+    // document.getElementById('fps').innerText = floor(frameRate())
     bound.x = player.x
     translate(-player.x + width / 2, 8)
     fall = false;
@@ -190,9 +194,9 @@ function mouseClicked() {
     // } else
     if (x > 7) {
         print("background")
-        pnt = new BackgroundSprite(x, floor((mouseX + 8 + player.x - width / 2) / 16) * 16, floor((mouseY + 8) / 16) * 16, blocks[x].width, blocks[x].height)
+        pnt = new BackgroundSprite(x, floor((mouseX + 8 + player.x - width / 2) / 16) * 16, floor((mouseY) / 16) * 16, blocks[x].width, blocks[x].height)
     } else
-        pnt = new Sprite(x, floor((mouseX + 8 + player.x - width / 2) / 16) * 16, floor((mouseY + 8) / 16) * 16, blocks[x].width, blocks[x].height)
+        pnt = new Sprite(x, floor((mouseX + 8 + player.x - width / 2) / 16) * 16, floor((mouseY) / 16) * 16, blocks[x].width, blocks[x].height)
 
     allObjects.push(pnt);
 
