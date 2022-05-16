@@ -8,10 +8,11 @@ let mario
 
 let x;
 
-let debug = true;
+let debug = false;
 let gap;
 
 function preload() {
+
 
     blocks = [
         loadImage('sprites/block.png'),
@@ -43,13 +44,15 @@ function setup() {
     createCanvas(320, 240);
     // scale()
 
+
+    document.oncontextmenu = function () {
+        return false;
+    }
+
     gap = 0
     x = 0
 
-
-
-
-    bound = new Rect((width - (gap / 2)) / 2, (height -16 + (gap / 2)) / 2, (width+ 100+ gap) / 2, (height + gap) / 2);
+    bound = new Rect((width - (gap / 2)) / 2, (height - 16 + (gap / 2)) / 2, (width + 100 + gap) / 2, (height + gap) / 2);
     player = new Player(width / 2, height / 2);
 
 
@@ -60,7 +63,7 @@ let start = false;
 function draw() {
     // document.getElementById('fps').innerText = floor(frameRate())
     bound.x = player.x
-    translate(-player.x + width / 2, 8)
+    translate(-player.x - 8 + width / 2, 8)
     fall = false;
 
     background(92, 148, 252);
@@ -73,10 +76,10 @@ function draw() {
     let range = new Rect(player.x, player.y, 32, 32);
     // let range2 = new Rect(player.x, player.y, 2, 2);
     // let pnt = new Rect((int)((mouseX + 8) / 16) * 16, (int)((mouseY + 8) / 16) * 16, 16, 16)
-    let pnt = new Sprite(x, (int)((mouseX + 8 + player.x - width / 2) / 16) * 16, (int)((mouseY) / 16) * 16, blocks[x].width, blocks[x].height)
+    let pnt = new Sprite(x, (int)((mouseX + 16 + player.x - width / 2) / 16) * 16, (int)((mouseY) / 16) * 16, blocks[x].width, blocks[x].height)
     // pnt.opacity = 127;
 
-    let pnt2 = new Rect((int)((mouseX + 8 + player.x - width / 2) / 16) * 16, (int)((mouseY) / 16) * 16, 16, 16)
+    let pnt2 = new Rect((int)((mouseX + 16 + player.x - width / 2) / 16) * 16, (int)((mouseY) / 16) * 16, 16, 16)
 
     qt.draw()
     stroke("green");
@@ -175,32 +178,38 @@ function draw() {
     // console.log(player.move_l, player.move_r)
     player.update()
     player.draw()
+
+
+
+    if (mouseIsPressed === true) {
+        if (mouseButton === RIGHT) {
+            let result = qt.query(new Rect((int)((mouseX + 16 + player.x - width / 2) / 16) * 16, (int)((mouseY) / 16) * 16, 7, 7))
+            if (result != null) {
+                index = allObjects.indexOf(result[0]);
+                if (index > -1) {
+                    allObjects.splice(index, 1); // 2nd parameter means remove one item only
+                }
+            }
+        }
+    }
 }
 
 
 function keyPressed() {
-
-    if (keyCode >= 49 && keyCode <= 52)
-        x = keyCode - 49;
-    else
-        start = true;
-
+    start = true;
 }
+function mouseClicked(event) {
 
-function mouseClicked() {
-    // if (floor(abs(mouseY - height) / 16) < 3) x = 2
-    // if (x == 5) {
-    //     pnt = new Sprite(x, floor((mouseX + 8 + player.x - width / 2) / 16) * 16, floor((mouseY + 8) / 16) * 16, 16, 16,)
-    // } else
+
     if (x > 7) {
         print("background")
-        pnt = new BackgroundSprite(x, floor((mouseX + 8 + player.x - width / 2) / 16) * 16, floor((mouseY) / 16) * 16, blocks[x].width, blocks[x].height)
+        pnt = new BackgroundSprite(x, (int)((mouseX + 16 + player.x - width / 2) / 16) * 16, (int)((mouseY) / 16) * 16, blocks[x].width, blocks[x].height)
     } else
-        pnt = new Sprite(x, floor((mouseX + 8 + player.x - width / 2) / 16) * 16, floor((mouseY) / 16) * 16, blocks[x].width, blocks[x].height)
+        pnt = new Sprite(x, (int)((mouseX + 16 + player.x - width / 2) / 16) * 16, (int)((mouseY) / 16) * 16, blocks[x].width, blocks[x].height)
 
     allObjects.push(pnt);
 
-    return false; W
+    return false;
 }
 
 function saveLevel() {
