@@ -41,9 +41,12 @@ function preload() {
 
 function setup() {
 
-    createCanvas(320, 240);
+
+    let renderer = createCanvas(320, 240);
+    renderer.parent("p5js");
     adjust()
-    // scale()
+
+    frameRate(60)
 
     document.oncontextmenu = function () {
         return false;
@@ -66,7 +69,7 @@ function draw() {
 
 
     translate(floor(-player.x - 8 + width / 2), 8)
-    
+
     // document.getElementById('fps').innerText = floor(frameRate())
     bound.x = player.x
     fall = false;
@@ -185,15 +188,42 @@ function draw() {
     player.draw()
 
     if (mouseIsPressed === true) {
-        if (mouseButton === RIGHT) {
-            let result = qt.query(new Rect((int)((mouseX + 16 + player.x - width / 2) / 16) * 16, (int)((mouseY) / 16) * 16, 7, 7))
-            if (result != null) {
-                index = allObjects.indexOf(result[0]);
-                if (index > -1) {
-                    allObjects.splice(index, 1); // 2nd parameter means remove one item only
+        // console.log(mouseY,)
+        if (mouseY <= height) {
+            if (mouseButton === RIGHT) {
+
+                let result = qt.query(new Rect((int)((mouseX + 16 + player.x - width / 2) / 16) * 16, (int)((mouseY) / 16) * 16, 7, 7))
+                if (result != null) {
+                    index = allObjects.indexOf(result[0]);
+                    if (index > -1) {
+                        allObjects.splice(index, 1); // 2nd parameter means remove one item only
+                    }
                 }
             }
+        } else {
+            start = true
+            if (mouseX < width / 3) {
+                touchControl.left = true
+                touchControl.right = false
+                touchControl.up = false
+            } else if (mouseX > 2 * width / 3) {
+                touchControl.left = false
+                touchControl.right = true
+                touchControl.up = false
+            } else {
+
+                // touchControl.left = false
+                // touchControl.right = false
+                touchControl.up = true
+
+            }
+
         }
+    } else {
+        touchControl.left = false
+        touchControl.right = false
+        touchControl.up = false
+
     }
 }
 
@@ -202,16 +232,15 @@ function keyPressed() {
     start = true;
 }
 function mouseClicked(event) {
+    if (mouseY < height) {
+        if (x > 7) {
+            print("background")
+            pnt = new BackgroundSprite(x, (int)((mouseX + 16 + player.x - width / 2) / 16) * 16, (int)((mouseY) / 16) * 16, blocks[x].width, blocks[x].height)
+        } else
+            pnt = new Sprite(x, (int)((mouseX + 16 + player.x - width / 2) / 16) * 16, (int)((mouseY) / 16) * 16, blocks[x].width, blocks[x].height)
 
-
-    if (x > 7) {
-        print("background")
-        pnt = new BackgroundSprite(x, (int)((mouseX + 16 + player.x - width / 2) / 16) * 16, (int)((mouseY) / 16) * 16, blocks[x].width, blocks[x].height)
-    } else
-        pnt = new Sprite(x, (int)((mouseX + 16 + player.x - width / 2) / 16) * 16, (int)((mouseY) / 16) * 16, blocks[x].width, blocks[x].height)
-
-    allObjects.push(pnt);
-
+        allObjects.push(pnt);
+    }
     return false;
 }
 
@@ -247,7 +276,12 @@ function mouseWheel(event) {
         x = (x - 1) % blocks.length
 
     x = x < 0 ? blocks.length - 1 : x
-    print(x)
+    // print(x)
 
 }
 
+let touchControl = {
+    left: false,
+    right: false,
+    up: false
+}

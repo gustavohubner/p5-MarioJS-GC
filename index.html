@@ -11,18 +11,24 @@
 	<script src="classes/player.js"></script>
 
 	<script>
+		
 		function adjust() {
 
 			let cvs = document.getElementById("defaultCanvas0")
-			console.log(cvs)
-			cvs.style.maxWidth = "100%"
-			cvs.style.minWidth = "66%"
-			cvs.style.maxHeight = "100%"
-			cvs.style.height = "auto"
-			cvs.style.aspectRatio = 4/3
+			cvs.style.aspectRatio = 4 / 3
 			cvs.style.imageRendering = "pixelated"
-			// cvs.style.maxHeight = "100%"
+			if (window.innerWidth/4 > window.innerHeight/3) {
+				cvs.style.height = "95vh"
+				cvs.style.width = "auto"
+			} else {
+				cvs.style.width = "95vw"
+				cvs.style.height = "auto"
+			}
 		}
+
+		window.addEventListener('resize', function (event) {
+			adjust()
+		});
 
 	</script>
 
@@ -30,7 +36,11 @@
 
 <body style="text-align: center; background-color: black">
 
-	<script src="sketch.js"></script>
+	
+	<div id="p5js">
+		<script src="sketch.js"></script>
+	</div>
+	<div id="joyDiv"></div>
 
 </body>
 

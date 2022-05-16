@@ -40,14 +40,14 @@ class Player {
         this.acc.set(0, 0)
 
         // console.log(this.vel.x)
-        if (keyIsDown(UP_ARROW)) {
+        if (keyIsDown(UP_ARROW) || touchControl.up) {
             this.jump()
         }
 
-        if (keyIsDown(LEFT_ARROW) && this.move_l) {
+        if ((keyIsDown(LEFT_ARROW)|| touchControl.left) && this.move_l) {
             if (this.vel.x > 0.1) this.vel.x *= this.breaking / 1.1
             else this.applyForce(createVector(-this.accel, 0))
-        } else if (keyIsDown(RIGHT_ARROW) && this.move_r) {
+        } else if ((keyIsDown(RIGHT_ARROW) || touchControl.right )&& this.move_r) {
             if (this.vel.x < -0.1) this.vel.x *= this.breaking / 1.1
             else this.applyForce(createVector(this.accel, 0))
         } else {
@@ -82,7 +82,7 @@ class Player {
             this.y--;
             var jump = createVector(0, -3.7)
             this.applyForce(jump)
-            console.log('jump')
+            // console.log('jump')
             this.jumpLock = true;
         }
     }
