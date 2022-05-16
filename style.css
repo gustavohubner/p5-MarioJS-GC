@@ -4,5 +4,8 @@ html, body {
 }
 
 canvas {
-  display: block;
+  display: block;  
+  image-rendering: pixelated !important;
+  image-rendering: -moz-crisp-edges !important;;
+  image-rendering: crisp-edges !important;;
 }

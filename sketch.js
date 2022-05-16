@@ -42,8 +42,8 @@ function preload() {
 function setup() {
 
     createCanvas(320, 240);
+    adjust()
     // scale()
-
 
     document.oncontextmenu = function () {
         return false;
@@ -57,13 +57,18 @@ function setup() {
 
 
     load11()
+
 }
 let start = false;
 
 function draw() {
+    player.update()
+
+
+    translate(floor(-player.x - 8 + width / 2), 8)
+    
     // document.getElementById('fps').innerText = floor(frameRate())
     bound.x = player.x
-    translate(-player.x - 8 + width / 2, 8)
     fall = false;
 
     background(92, 148, 252);
@@ -176,10 +181,8 @@ function draw() {
 
 
     // console.log(player.move_l, player.move_r)
-    player.update()
+
     player.draw()
-
-
 
     if (mouseIsPressed === true) {
         if (mouseButton === RIGHT) {

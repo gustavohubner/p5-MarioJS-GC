@@ -10,12 +10,29 @@
 	<script src="classes/quadtree.js"></script>
 	<script src="classes/player.js"></script>
 
+	<script>
+		function adjust() {
+
+			let cvs = document.getElementById("defaultCanvas0")
+			console.log(cvs)
+			cvs.style.maxWidth = "100%"
+			cvs.style.minWidth = "66%"
+			cvs.style.maxHeight = "100%"
+			cvs.style.height = "auto"
+			cvs.style.aspectRatio = 4/3
+			cvs.style.imageRendering = "pixelated"
+			// cvs.style.maxHeight = "100%"
+		}
+
+	</script>
+
 </head>
 
-<body>
+<body style="text-align: center; background-color: black">
 
 	<script src="sketch.js"></script>
-	<!-- <p id="fps"></p> -->
+
 </body>
+
 
 </html>

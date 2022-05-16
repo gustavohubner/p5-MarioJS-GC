@@ -24,8 +24,8 @@ class Player {
     }
 
     draw() {
-        this.sprite.x = this.x
-        this.sprite.y = this.y
+        this.sprite.x = floor(this.x)
+        this.sprite.y = floor(this.y)
         this.sprite.draw(this.vel,this.acc)
     }
 
@@ -73,6 +73,7 @@ class Player {
             this.vel = createVector(0, 0)
         }
 
+        
 
     }
 

@@ -80,8 +80,8 @@ class Sprite {
 class AnimSprite {
     constructor(source = mario, x, y, w, h,) {
         // this.img = img
-        this.x = x
-        this.y = y
+        this.x = floor(x)
+        this.y =floor( y)
         this.w = w
         this.h = h
         this.source = source
@@ -142,8 +142,8 @@ class AnimSprite {
 class BackgroundSprite {
     constructor(sprite = 0, x, y, w, h,) {
         // this.img = img
-        this.x = x
-        this.y = y
+        this.x = floor(x)
+        this.y = floor(y)
         this.w = w
         this.h = h
         this.sprite = sprite
