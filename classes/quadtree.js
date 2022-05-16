@@ -4,7 +4,6 @@ class QuadTree {
         this.capacity = n;
         this.points = [];
         this.divided = false;
-        this.parent
     }
 
     subdivide() {
@@ -70,6 +69,8 @@ class QuadTree {
     }
 
     batchInsert(points) {
+        this.points = [];
+        this.divided = false;
         points.forEach(point => {
             this.insert(point);
         });

@@ -20,6 +20,10 @@ class Player {
         this.dead = false
         this.speed = 2.5
         this.sprite = new AnimSprite(mario, this.x, this.y, 16, 16)
+
+        this.range = new Rect(x, y, 32, 32);
+        this.mPoint = new Point(x, y) //player
+        this.mPoint2 = new Point(x, y - 1) // player jump collider
         // this.sprite.color = "pink"
     }
 
@@ -45,7 +49,12 @@ class Player {
 
         if (this.vel.x < 0.03 && this.vel.x > -0.03) this.vel.x = 0
 
-
+        this.range.x = this.x
+        this.range.y = this.y
+        this.mPoint.x = this.x
+        this.mPoint.y = this.y
+        this.mPoint2.x = this.x
+        this.mPoint2.y = this.y - 1
 
         this.checkCollisions(qt)
         this.checkCollisions(qtEnemies)
@@ -53,7 +62,7 @@ class Player {
         // console.log(gravity)
         this.vel.add(this.acc)
         this.acc.set(0, 0)
-        
+
         if (!this.dead) {
             // console.log(this.vel.x)
             if (keyIsDown(UP_ARROW) || touchControl.up) {
@@ -114,7 +123,7 @@ class Player {
     checkCollisions(qtree) {
         // console.log(qtree)
         if (!this.dead) {
-            let objects = qtree.query(range, []);
+            let objects = qtree.query(this.range, []);
             if (objects != null) {
                 for (let p of objects) {
                     if (p instanceof Enemy || p instanceof Sprite) {
@@ -127,11 +136,11 @@ class Player {
 
     collide(p) {
         let isEnemy = p instanceof Enemy
-        if (p.intersects(range))
+        if (p.intersects(this.range))
             // stroke("green");
-            if (p.contains(mPoint)) {
+            if (p.contains(this.mPoint)) {
                 // stroke("red");
-                if (p.contains(mPoint2)) {
+                if (p.contains(this.mPoint2)) {
                     if (p.y < this.y && abs(p.x - this.x) < 10 && ((this.y - p.y) < 15) && (this.y - p.y) > 0) {
                         if (isEnemy) {
                             this.die()
