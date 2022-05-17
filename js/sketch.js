@@ -58,7 +58,7 @@ function preload() {
         loadSound('sounds/pause.wav'),
         loadSound('sounds/theme.wav'),
         loadSound('sounds/coin.wav'),
-
+        loadSound('sounds/kick.wav'),
     ]
     mario = loadImage('sprites/marioSheet.png')
 
@@ -84,14 +84,14 @@ function setup() {
         mario.get(1 * 16, 0, 16, 16),
         mario.get(2 * 16, 0, 16, 16),
         mario.get(3 * 16, 0, 16, 16),
-        mario.get(4 * 16, 0, 16, 16),
+        mario.get(4 * 16, 16, 16, 16),
         mario.get(5 * 16, 0, 16, 16),
         mario.get(6 * 16, 0, 16, 16),
         mario.get(0 * 16, 16, 16, 16),
         mario.get(1 * 16, 16, 16, 16),
         mario.get(2 * 16, 16, 16, 16),
         mario.get(3 * 16, 16, 16, 16),
-        mario.get(4 * 16, 16, 16, 16),
+        mario.get(4 * 16, 0, 16, 16),
         mario.get(5 * 16, 16, 16, 16),
         mario.get(6 * 16, 16, 16, 16),
     ]
@@ -173,9 +173,9 @@ function draw() {
     qtEnemies.draw()
     player.draw()
 
-    imageMode(CENTER)         
+    imageMode(CENTER)
     translate(-floor(-player.x - 8 + width / 2), -8)
-    image(gui, width/2, height / 2, startImg.width, startImg.height)
+    image(gui, width / 2, height / 2, startImg.width, startImg.height)
 
 
     player.update()
@@ -225,21 +225,22 @@ function draw() {
 
 
     // pop()
-    
+
 }
 
 
 function keyPressed() {
     start = true;
     if (keyCode === ENTER) {
+        if (!player.lock) {
+            sounds[5].pause()
+            sounds[4].play()
+            if (isLooping()) noLoop()
+            else {
+                loop()
+                if (!player.dead) setTimeout(function () { sounds[5].play() }, 500);
 
-        sounds[5].pause()
-        sounds[4].play()
-        if (isLooping()) noLoop()
-        else {
-            loop()
-            if (!player.dead) setTimeout(function () { sounds[5].play() }, 500);
-
+            }
         }
     }
 }

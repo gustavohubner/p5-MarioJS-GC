@@ -14,7 +14,7 @@ class Player {
 
         this.lives = 3
 
-        this.breaking = 0.9
+        this.breaking = 0.92
         this.accel = 0.05
 
         this.jumpLock = true
@@ -72,10 +72,10 @@ class Player {
             }
 
             if ((keyIsDown(LEFT_ARROW) || touchControl.left) && this.move_l) {
-                if (this.vel.x > 0.1) this.vel.x *= this.breaking / 1.1
+                if (this.vel.x > 0.1) this.vel.x *= this.breaking 
                 else this.applyForce(createVector(-this.accel, 0))
             } else if ((keyIsDown(RIGHT_ARROW) || touchControl.right) && this.move_r) {
-                if (this.vel.x < -0.1) this.vel.x *= this.breaking / 1.1
+                if (this.vel.x < -0.1) this.vel.x *= this.breaking
                 else this.applyForce(createVector(this.accel, 0))
             } else {
                 this.vel.x *= this.breaking
@@ -102,18 +102,19 @@ class Player {
                         loop()
                         load11()
                         player.x = width / 2
-                        player.y = height / 2
+                        player.y = height - 48
                         player.dead = false
                         player.vel = createVector(0, 0)
 
 
                         if (this.lives > 0) {
                             sounds[5].play()
-                            player.lock = false
+
                         } else {
                             this.lives = 3
                             start = false
                         }
+                        player.lock = false
 
                     }, 4000);
             }
@@ -145,18 +146,25 @@ class Player {
                 // stroke("red");
                 if (p.contains(this.mPoint2)) {
                     if (p.y < this.y && abs(p.x - this.x) < 10 && ((this.y - p.y) < 15) && (this.y - p.y) > 0) {
+                        // colisão acima
                         if (isEnemy) {
-                            this.die()
+                            if (!p.dead)
+                                this.die()
                             return
                         } else {
-                            if (p.sprite == 3) {
-                                p.sprite = 8
-                                setTimeout(function () { sounds[6].play() }, 100);
-                            }
+
+
                             this.move_u = false
                             this.vel.y = 0
                             this.y += (16 - abs(this.y - p.y));
                             this.y++;
+
+                            if (p.sprite == 1 || p.sprite == 3) p.bump()
+                            if (p.sprite == 3) {
+                                p.sprite = 8
+                                setTimeout(function () { sounds[6].play() }, 100);
+                            }
+
                             setTimeout(function () { sounds[0].stop() }, 110);
                             setTimeout(function () { sounds[3].play() }, 100);
                             return
@@ -164,11 +172,13 @@ class Player {
                     }
                 }
                 if ((p.y >= this.y) && (abs(p.x - this.x) < 16) && (abs(p.y - this.y) <= 16) && (abs(p.y - this.y) > 8)) {
-
+                    // colisão abaixo
                     if (isEnemy) {
-                        this.vel.y = 0
-                        p.kill(p)
-                        this.smallJump()
+                        if (!p.dead) {
+                            this.vel.y = 0
+                            p.kill(p)
+                            this.smallJump()
+                        }
                         return
                     } else {
                         this.move_d = false;
@@ -179,11 +189,13 @@ class Player {
                     }
                 }
                 if ((p.x < this.x) && (abs(this.x - p.x) <= 16) && (abs(p.y - this.y) < 15)) {
-
+                    // colisão esquerda
                     if (isEnemy) {
-                        this.vel.y = 0
-                        this.die()
-                        this.jump()
+                        if (!p.dead) {
+                            this.vel.y = 0
+                            this.die()
+                            this.jump()
+                        }
                         return
                     } else {
                         this.move_l = false;
@@ -193,10 +205,13 @@ class Player {
                     }
                 }
                 if ((p.x > this.x) && (abs(this.x - p.x) <= 16) && (abs(p.y - this.y) < 15)) {
+                    // colisão direita
                     if (isEnemy) {
-                        this.vel.y = 0
-                        this.die()
-                        this.jump()
+                        if (!p.dead) {
+                            this.vel.y = 0
+                            this.die()
+                            this.jump()
+                        }
                         return
                     } else {
 

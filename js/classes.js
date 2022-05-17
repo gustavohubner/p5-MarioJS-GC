@@ -51,6 +51,7 @@ class Sprite {
         this.w = w
         this.h = h
         this.sprite = sprite
+        this.bumpLock = false
     }
 
     contains(point) {
@@ -70,6 +71,22 @@ class Sprite {
     draw() {
         imageMode(CENTER)
         image(blocks[this.sprite], this.x, this.y, this.w, this.h)
+    }
+
+    bump() {
+        if (!this.bumpLock) {
+            this.bumpLock = true
+            console.log("BUMP")
+            // this.y -= 7
+            setTimeout(function (block) { block.y = block.y - 4 }, 0, this);
+            setTimeout(function (block) { block.y = block.y - 2 }, 30, this);
+            setTimeout(function (block) { block.y = block.y - 1 }, 60, this);
+            setTimeout(function (block) { block.y = block.y + 1 }, 120, this);
+            setTimeout(function (block) { block.y = block.y + 2 }, 150, this);
+            setTimeout(function (block) { block.y = block.y + 4; block.bumpLock = false }, 180, this);
+
+
+        }
     }
 }
 
@@ -141,6 +158,7 @@ class MarioSprite {
 
 class Enemy {
     constructor(sprite = 0, x, y, w, h,) {
+        this.dead = false
 
         this.vel = createVector(0, 0)
         this.acc = createVector(0, 0)
@@ -150,7 +168,7 @@ class Enemy {
         this.h = h
         this.dir = 0
         this.sprite = sprite
-        this.speed = 0.3
+        this.speed = 0.5
         this.index = 0
 
         this.range = new Rect(x, y, w, h)
@@ -196,15 +214,22 @@ class Enemy {
             this.y += this.vel.y
 
 
-        this.index = this.index + abs(this.speed / 3)
-        this.x -= this.speed
-        this.index = (this.index > 2 ? this.index - 2 : this.index)
 
-        this.range.x = this.x
-        this.range.y = this.y
+        if (!this.dead) {
+            this.x -= this.speed
+            this.index = this.index + abs(this.speed / 4)
 
-        this.point.x = this.x
-        this.point.y = this.y
+            this.index = (this.index > 2 ? this.index - 2 : this.index)
+
+            this.range.x = this.x
+            this.range.y = this.y
+
+            this.point.x = this.x
+            this.point.y = this.y
+        } else {
+            this.x += this.vel.x
+
+        }
 
 
 
@@ -232,6 +257,18 @@ class Enemy {
             this.kill()
 
     }
+
+    bumpDie() {
+        this.dead = true
+        sounds[7].play()
+        this.y--;
+        this.vel = createVector(0, 0)
+        var jump = createVector(-1, -4)
+        this.applyForce(jump)
+        this.range.w = 0
+        this.range.h = 0
+    }
+
     kill(ref) {
         this.speed = 0
         this.index = 0
@@ -254,28 +291,27 @@ class Enemy {
         if (p.intersects(this.range))
             // stroke("green");
             if (p.contains(this.point)) {
-                // stroke("red");
-                // console.log("ENEMY")
+                if (!((p instanceof Enemy) && (p.dead))) {
+                    if ((p.y >= this.y) && (abs(p.x - this.x) < 15) && (abs(p.y - this.y) <= 16) && (abs(p.y - this.y) > 8)) {
+                        // this.speed = -this.speed
+                        this.move_d = false
+                        this.vel.y = 0
+                        this.y -= abs(16 - (p.y - this.y))
+                        if (p.bumpLock) this.bumpDie()
+                        return
+                    }
+                    if ((p.x < this.x) && (abs(this.x - p.x) <= 16) && (abs(p.y - this.y) < 15)) {
 
-                if ((p.y >= this.y) && (abs(p.x - this.x) < 15) && (abs(p.y - this.y) <= 16) && (abs(p.y - this.y) > 8)) {
-                    // this.speed = -this.speed
-                    this.move_d = false
-                    this.vel.y = 0
-                    this.y -= abs(16 - (p.y - this.y))
-                    return
-                }
+                        this.speed = -this.speed
+                        this.x += (16 - abs(this.x - p.x))
+                        return
+                    }
+                    if ((p.x > this.x) && (abs(this.x - p.x) <= 16) && (abs(p.y - this.y) < 15)) {
 
-                if ((p.x < this.x) && (abs(this.x - p.x) <= 16) && (abs(p.y - this.y) < 15)) {
-
-                    this.speed = -this.speed
-                    this.x += (16 - abs(this.x - p.x))
-                    return
-                }
-                if ((p.x > this.x) && (abs(this.x - p.x) <= 16) && (abs(p.y - this.y) < 15)) {
-
-                    this.speed = -this.speed
-                    this.x -= (16 - abs(this.x - p.x))
-                    return
+                        this.speed = -this.speed
+                        this.x -= (16 - abs(this.x - p.x))
+                        return
+                    }
                 }
             }
     }
