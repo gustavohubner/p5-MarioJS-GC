@@ -240,6 +240,7 @@ class Enemy {
     kill(ref) {
         this.speed = 0
         this.index = 0
+        sounds[1].play()
 
         setTimeout(
             function () {

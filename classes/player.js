@@ -94,12 +94,12 @@ class Player {
         if (this.y > height) {
             if (!this.lock) {
                 this.lock = true
-
-                setTimeout(
-                    function () {
-                        noLoop()
-                        background(0)
-                    }, 1000);
+                this.die()
+                // setTimeout(
+                //     function () {
+                //         noLoop()
+                //         background(0)
+                //     }, 2000);
 
                 setTimeout(
                     function () {
@@ -109,10 +109,10 @@ class Player {
                         player.y = height / 2
                         player.dead = false
                         player.vel = createVector(0, 0)
-
+                        sounds[5].play()
                         player.lock = false
 
-                    }, 3000);
+                    }, 4000);
             }
         }
 
@@ -150,6 +150,9 @@ class Player {
                             this.vel.y = 0
                             this.y += (16 - abs(this.y - p.y));
                             this.y++;
+                            setTimeout(function () { sounds[0].stop() }, 110);
+                            setTimeout(function () { sounds[3].play() }, 100);
+                            // sounds[3].play()
                             return
                         }
                     }
@@ -204,10 +207,11 @@ class Player {
     jump() {
         if (!this.jumpLock && this.vel.y == 0) {
             this.y--;
-            var jump = createVector(0, -3.7)
+            var jump = createVector(0, -5)
             this.applyForce(jump)
             // console.log('jump')
             this.jumpLock = true;
+            if (!this.dead) setTimeout(function () { sounds[0].play() }, 100);
         }
     }
 
@@ -222,9 +226,13 @@ class Player {
     }
 
     die() {
-        this.acc = createVector(0, 0)
-        this.vel.x = 0
-        this.dead = true
+        if (!this.dead) {
+            this.acc = createVector(0, 0)
+            this.vel.x = 0
+            this.dead = true
+            sounds[5].stop()
+            sounds[2].play()
+        }
 
     }
 }

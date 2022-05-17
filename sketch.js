@@ -1,25 +1,31 @@
 let qt;
 let qtEnemies;
+
 let bound
 let allObjects = [];
 let enemies = []
 let player;
 
-let blocks;
+let gravity
+
+let blocks = [];
+let sounds = []
 let mario
 
 let x;
-
-let debug = false;
+const debug = false;
 let gap;
 
-let gravity
+let q, question = []
+
 
 let start = false;
 let pnt
 let pnt2
 
 function preload() {
+    q = loadImage('sprites/questionAnim.png')
+
     blocks = [
         loadImage('sprites/block.png'),
         loadImage('sprites/brick.png'),
@@ -40,16 +46,35 @@ function preload() {
         loadImage('sprites/castle.png'),
         loadImage('sprites/pole.png'),
         loadImage('sprites/goomba.png')
+    ]
+
+    sounds = [
+        loadSound('sounds/jump.wav'),
+        loadSound('sounds/stomp.wav'),
+        loadSound('sounds/m_die.wav'),
+        loadSound('sounds/bump.wav'),
+        loadSound('sounds/pause.wav'),
+        loadSound('sounds/theme.wav'),
 
     ]
+
+
     mario = loadImage('sprites/marioSheet.png')
 }
 
 
 function setup() {
 
+    question = [
+        q.get(0 * 16, 0, 16, 16),
+        q.get(1 * 16, 0, 16, 16),
+        q.get(2 * 16, 0, 16, 16),
+        q.get(1 * 16, 0, 16, 16),
+        q.get(0 * 16, 0, 16, 16),
+        q.get(0 * 16, 0, 16, 16),
+    ]
 
-    gravity = createVector(0, 0.1);
+    gravity = createVector(0, 0.2);
     let renderer = createCanvas(320, 240);
     renderer.parent("p5js");
     adjust()
@@ -74,13 +99,17 @@ function setup() {
     qtEnemies = new QuadTree(bound, 4, null);
 
     load11()
+    sounds[5].loop()
+
+    noLoop()
+    sounds[5].pause()
 
 }
 
 
 function draw() {
 
-
+    blocks[3] = question[floor(frameCount / 8) % 6]
     translate(floor(-player.x - 8 + width / 2), 8)
 
     // document.getElementById('fps').innerText = floor(frameRate())
@@ -155,6 +184,17 @@ function draw() {
 
 function keyPressed() {
     start = true;
+    if (keyCode === ENTER) {
+
+        sounds[5].pause()
+        sounds[4].play()
+        if (isLooping()) noLoop()
+        else {
+            loop()
+            if (!player.dead) setTimeout(function () { sounds[5].play() }, 500);
+
+        }
+    }
 }
 
 function mouseClicked(event) {
