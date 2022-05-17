@@ -146,18 +146,21 @@ class Player {
                             this.die()
                             return
                         } else {
+                            if (p.sprite == 3) {
+                                p.sprite = 8
+                                setTimeout(function () { sounds[6].play() }, 100);
+                            }
                             this.move_u = false
                             this.vel.y = 0
                             this.y += (16 - abs(this.y - p.y));
                             this.y++;
                             setTimeout(function () { sounds[0].stop() }, 110);
                             setTimeout(function () { sounds[3].play() }, 100);
-                            // sounds[3].play()
                             return
                         }
                     }
                 }
-                if ((p.y >= this.y) && (abs(p.x - this.x) < 15) && (abs(p.y - this.y) <= 16) && (abs(p.y - this.y) > 8)) {
+                if ((p.y >= this.y) && (abs(p.x - this.x) < 16) && (abs(p.y - this.y) <= 16) && (abs(p.y - this.y) > 8)) {
 
                     if (isEnemy) {
                         this.vel.y = 0
@@ -169,8 +172,8 @@ class Player {
                         this.jumpLock = false
                         this.vel.y = 0
                         this.y -= abs(16 - (p.y - this.y))
+                        return
                     }
-                    return
                 }
                 if ((p.x < this.x) && (abs(this.x - p.x) <= 16) && (abs(p.y - this.y) < 15)) {
 

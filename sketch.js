@@ -16,7 +16,7 @@ let x;
 const debug = false;
 let gap;
 
-let q, question = []
+let q, question = [],startimg
 
 
 let start = false;
@@ -25,6 +25,7 @@ let pnt2
 
 function preload() {
     q = loadImage('sprites/questionAnim.png')
+    startimg = loadImage('sprites/start.png')
 
     blocks = [
         loadImage('sprites/block.png'),
@@ -35,6 +36,7 @@ function preload() {
         loadImage('sprites/pipe2.png'),
         loadImage('sprites/pipe3.png'),
         loadImage('sprites/pipe4.png'),
+        loadImage('sprites/used.png'),
         loadImage('sprites/mountain.png'),
         loadImage('sprites/mountain2.png'),
         loadImage('sprites/bush.png'),
@@ -55,10 +57,9 @@ function preload() {
         loadSound('sounds/bump.wav'),
         loadSound('sounds/pause.wav'),
         loadSound('sounds/theme.wav'),
+        loadSound('sounds/coin.wav'),
 
     ]
-
-
     mario = loadImage('sprites/marioSheet.png')
 }
 
@@ -89,7 +90,7 @@ function setup() {
     x = 0
 
     bound = new Rect((width - (gap / 2)) / 2, (height - 16 + (gap / 2)) / 2, (width + 100 + gap) / 2, (height + gap) / 2);
-    player = new Player(width / 2, height / 2);
+    player = new Player(width / 2, height - 48);
 
     pnt = new Sprite(x, (int)((mouseX + 16 + player.x - width / 2) / 16) * 16, (int)((mouseY) / 16) * 16, blocks[x].width, blocks[x].height)
     pnt2 = new Rect((int)((mouseX + 16 + player.x - width / 2) / 16) * 16, (int)((mouseY) / 16) * 16, 16, 16)
@@ -109,6 +110,12 @@ function setup() {
 
 function draw() {
 
+    
+    imageMode(CENTER)
+    image(startimg, width / 2, height / 2, 144, 16)
+    if (!start) {
+        return
+    }
     blocks[3] = question[floor(frameCount / 8) % 6]
     translate(floor(-player.x - 8 + width / 2), 8)
 
@@ -126,7 +133,7 @@ function draw() {
     if (mouseX < width && mouseY < height) {
         pnt = new Sprite(x, (int)((mouseX + 16 + player.x - width / 2) / 16) * 16, (int)((mouseY) / 16) * 16, blocks[x].width, blocks[x].height)
         pnt2 = new Rect((int)((mouseX + 16 + player.x - width / 2) / 16) * 16, (int)((mouseY) / 16) * 16, 16, 16)
-        if (x == 18)
+        if (x == 19)
             pnt = new Sprite(x, (int)((mouseX + 16 + player.x - width / 2) / 16) * 16, (int)((mouseY) / 16) * 16, blocks[x].width, blocks[x].height)
 
         stroke("green");
@@ -199,12 +206,12 @@ function keyPressed() {
 
 function mouseClicked(event) {
     if (mouseY < height) {
-        if (x == 18) {
+        if (x == 19) {
             print('enemy')
             pnt = new Enemy(x, (int)((mouseX + 16 + player.x - width / 2) / 16) * 16, (int)((mouseY) / 16) * 16, 16, 16)
             enemies.push(pnt)
             return false
-        } else if (x > 7) {
+        } else if (x > 8) {
             print("background")
             pnt = new BackgroundSprite(x, (int)((mouseX + 16 + player.x - width / 2) / 16) * 16, (int)((mouseY) / 16) * 16, blocks[x].width, blocks[x].height)
         } else
@@ -233,11 +240,11 @@ function loadLevel(level) {
     arr = JSON.parse(level)
 
     arr.forEach(function (e) {
-        if (e[2] == 18) {
+        if (e[2] == 19) {
             pnt = new Enemy(e[2], (int)(e[0] / 16) * 16, (int)(e[1] / 16) * 16, 16, 16)
             enemies.push(pnt)
             return
-        } else if (e[2] > 7)
+        } else if (e[2] > 8)
             pnt = new BackgroundSprite(e[2], (int)(e[0] / 16) * 16, (int)(e[1] / 16) * 16, blocks[e[2]].width, blocks[e[2]].height)
         else
             pnt = new Sprite(e[2], (int)(e[0] / 16) * 16, (int)(e[1] / 16) * 16, blocks[e[2]].width, blocks[e[2]].height)
@@ -258,4 +265,11 @@ let touchControl = {
     left: false,
     right: false,
     up: false
+}
+
+function atualiza() {
+    for (p of allObjects) {
+        if (p.sprite > 7)
+            p.sprite++
+    }
 }
