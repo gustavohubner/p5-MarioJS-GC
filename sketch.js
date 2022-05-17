@@ -16,7 +16,7 @@ let x;
 const debug = false;
 let gap;
 
-let q, question = [],startimg
+let q, question = [], startimg
 
 
 let start = false;
@@ -110,7 +110,7 @@ function setup() {
 
 function draw() {
 
-    
+
     imageMode(CENTER)
     image(startimg, width / 2, height / 2, 144, 16)
     if (!start) {
@@ -168,6 +168,7 @@ function draw() {
             }
         } else {
             start = true
+
             if (mouseX < width / 3) {
                 touchControl.left = true
                 touchControl.right = false
@@ -218,7 +219,21 @@ function mouseClicked(event) {
             pnt = new Sprite(x, (int)((mouseX + 16 + player.x - width / 2) / 16) * 16, (int)((mouseY) / 16) * 16, blocks[x].width, blocks[x].height)
 
         allObjects.push(pnt);
+    } else {
+        if (!start) {
+            sounds[5].pause()
+            sounds[4].play()
+            if (isLooping()) noLoop()
+            else {
+                loop()
+                if (!player.dead) setTimeout(function () { sounds[5].play() }, 500);
+
+            }
+            start = true
+        }
     }
+
+
     return false;
 }
 
