@@ -149,6 +149,7 @@ function draw() {
             player.vel = createVector(0, 0); 
             player.acc = createVector(0, 0); 
             player.lives = 3
+            load11()
             loop();
         }, 8000);
     }
