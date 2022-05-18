@@ -13,10 +13,10 @@ let sounds = []
 let mario, marioSprites, goombaSprites
 
 let x;
-let debug = false;
+let debug = { value: true, capacity: 6 }
 let gap;
 
-let q, question = [], startImg, gui,lives
+let q, question = [], startImg, gui, lives
 
 
 let start = false;
@@ -63,10 +63,6 @@ function preload() {
         loadSound('sounds/stage_clear.wav')
     ]
     mario = loadImage('sprites/marioSheet.png')
-
-
-
-
 }
 
 
@@ -125,8 +121,10 @@ function setup() {
 
     pnt2 = new Rect((int)((mouseX + 16 + player.x - width / 2) / 16) * 16, (int)((mouseY) / 16) * 16, 16, 16)
 
-    qt = new QuadTree(bound, 16, debug);
-    qtEnemies = new QuadTree(bound, 16, debug);
+
+    // Quad Tree
+    qt = new QuadTree(bound, debug);
+    qtEnemies = new QuadTree(bound, debug);
 
     load11()
     sounds[5].loop()
@@ -141,19 +139,22 @@ function draw() {
         sounds[8].play()
         noLoop()
         setTimeout(function () {
-            start = false; player.x = width / 2;
+            start = false;
+            player.x = width / 2;
             player.y = height - 48;
             player.dead = false;
-            player.vel = createVector(0, 0); 
-            player.acc = createVector(0, 0); 
+            player.vel = createVector(0, 0);
+            player.acc = createVector(0, 0);
             player.lives = 3
             load11()
             loop();
         }, 8000);
     }
     background(92, 148, 252);
-    if (!start) {
+    if ((!start) || (player.lives < 0)) {
+        console.log((!start), (player.lives < 0))
         imageMode(CENTER)
+        player.lives = 3
         image(startImg, width / 2, height / 2, startImg.width, startImg.height)
         noLoop()
         return
@@ -169,10 +170,17 @@ function draw() {
     qt.draw()
     rectMode(CORNER);
     if (mouseX < width && mouseY < height) {
+<<<<<<< Updated upstream
         pnt = new Sprite(x, (int)((-xPos + mouseX+8)/ 16) * 16, (int)((mouseY) / 16) * 16, blocks[x].width, blocks[x].height)
         pnt2 = new Rect((int)((-xPos + mouseX+8) / 16) * 16, (int)((mouseY) / 16) * 16, 16, 16)
         if (x == 19)
             pnt = new Sprite(x, (int)((-xPos + mouseX+8)/ 16) * 16, (int)((mouseY) / 16) * 16, blocks[x].width, blocks[x].height)
+=======
+        pnt = new Sprite(x, (int)((-xPos + mouseX + 8) / 16) * 16, (int)((mouseY) / 16) * 16, blocks[x].width, blocks[x].height)
+        pnt2 = new Rect((int)((-xPos + mouseX + 8) / 16) * 16, (int)((mouseY) / 16) * 16, 16, 16)
+        if (x == 19)
+            pnt = new Sprite(x, (int)((-xPos + mouseX + 8) / 16) * 16, (int)((mouseY) / 16) * 16, blocks[x].width, blocks[x].height)
+>>>>>>> Stashed changes
 
         stroke("green");
         strokeWeight(1);
@@ -235,8 +243,8 @@ function draw() {
 
 
 function keyPressed() {
-    start = true;
     if (keyCode === ENTER) {
+        start = true;
         if (!player.lock) {
             sounds[5].pause()
             sounds[4].play()

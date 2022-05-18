@@ -12,7 +12,7 @@ function setup() {
     }
 
     bound = new Rect(width / 2, height / 2, width / 2, height / 2,);
-    qt = new QuadTree(bound, debug);
+    qt = new QuadTreeNodes(bound, debug);
 
 
     noLoop()
@@ -22,7 +22,7 @@ function setup() {
 
 function draw() {
 
-
+    qt.draw()
 
 }
 
@@ -34,7 +34,7 @@ function mouseClicked(event) {
         background(0)
         let pnt = new Point(mouseX, mouseY)
         qt.insert(pnt)
-        qt.draw()
+        // qt.draw()
         // }
         return false
     }

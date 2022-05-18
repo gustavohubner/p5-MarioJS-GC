@@ -12,7 +12,7 @@ class Player {
         this.move_u = true;
         this.move_d = true;
 
-        this.lives = 3
+        this.lives = 0
 
         this.breaking = 0.92
         this.accel = 0.05
@@ -40,6 +40,7 @@ class Player {
     }
 
     update() {
+        console.log(this.lives)
 
         if (this.move_d) this.applyForce(gravity)
 
@@ -105,11 +106,10 @@ class Player {
                         player.y = height - 48
                         player.dead = false
                         player.vel = createVector(0, 0)
-                        if (this.lives > 0) {
+                        if (player.lives > 0) {
                             sounds[5].play()
-
                         } else {
-                            this.lives = 3
+                            console.log("ORIGEM")
                             start = false
                         }
                         player.lock = false
@@ -117,8 +117,6 @@ class Player {
                     }, 4000);
             }
         }
-
-
         this.jumpLock = false;
     }
 
@@ -147,12 +145,9 @@ class Player {
                         // colisão acima
                         if (isEnemy) {
                             if (!p.dead)
-
                                 this.die()
                             return
                         } else {
-
-
                             this.move_u = false
                             this.vel.y = 0
                             this.y += (16 - abs(this.y - p.y));
@@ -163,7 +158,6 @@ class Player {
                                 p.sprite = 8
                                 setTimeout(function () { sounds[6].play() }, 100);
                             }
-
                             setTimeout(function () { sounds[0].stop() }, 110);
                             setTimeout(function () { sounds[3].play() }, 100);
                             return
@@ -217,7 +211,6 @@ class Player {
                         }
                         return
                     } else {
-
                         this.move_r = false;
                         this.vel.x = 0
                         this.x -= (16 - abs(this.x - p.x))
