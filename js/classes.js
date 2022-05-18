@@ -119,7 +119,7 @@ class MarioSprite {
         imageMode(CENTER)
         let index = 1 + floor(this.index) % 3
         if (dead) {
-            image(marioSprites[6], this.x, this.y, this.w, this.h)
+            image(marioSprites[6], this.x, this.y+1, this.w, this.h)
 
             return
         }
@@ -134,16 +134,16 @@ class MarioSprite {
 
         if (vel.y == 0)
             if (keyIsDown(LEFT_ARROW) && vel.x > 0)
-                image(marioSprites[4 + (7 * this.dir)], this.x, this.y, this.w, this.h)
+                image(marioSprites[4 + (7 * this.dir)], this.x, this.y+1, this.w, this.h)
             else if (keyIsDown(RIGHT_ARROW) && vel.x < 0)
-                image(marioSprites[4 + (7 * this.dir)], this.x, this.y, this.w, this.h)
+                image(marioSprites[4 + (7 * this.dir)], this.x, this.y+1, this.w, this.h)
             else
                 if (vel.x == 0)
-                    image(marioSprites[(7 * this.dir)], this.x, this.y, this.w, this.h)
+                    image(marioSprites[(7 * this.dir)], this.x, this.y+1, this.w, this.h)
                 else
-                    image(marioSprites[index + (7 * this.dir)], this.x, this.y, this.w, this.h)
+                    image(marioSprites[index + (7 * this.dir)], this.x, this.y+1, this.w, this.h)
         else
-            image(marioSprites[5 + (7 * this.dir)], this.x, this.y, this.w, this.h)
+            image(marioSprites[5 + (7 * this.dir)], this.x, this.y+1, this.w, this.h)
 
         this.animate();
     }
@@ -189,13 +189,13 @@ class Enemy {
     draw() {
         imageMode(CENTER)
         if (this.speed == 0) {
-            image(goombaSprites[2], floor(this.x), floor(this.y), 16, 16)
+            image(goombaSprites[2], floor(this.x), floor(this.y+1), 16, 16)
             this.h = 0
             this.w = 0
             return
         }
         // console.log((floor(this.index) % 2))
-        image(goombaSprites[floor(this.index) % 2], floor(this.x), floor(this.y), this.w, this.h)
+        image(goombaSprites[floor(this.index) % 2], floor(this.x), floor(this.y+1), this.w, this.h)
         this.update()
     }
 

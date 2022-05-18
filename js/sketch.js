@@ -13,10 +13,10 @@ let sounds = []
 let mario, marioSprites, goombaSprites
 
 let x;
-let debug = true;
+let debug = false;
 let gap;
 
-let q, question = [], startImg, gui
+let q, question = [], startImg, gui,lives
 
 
 let start = false;
@@ -25,6 +25,7 @@ let pnt, pnt2, xPos
 function preload() {
     q = loadImage('sprites/questionAnim.png')
     startImg = loadImage('sprites/menu.png')
+    // lives =  loadImage('sprites/start.png')
     gui = loadImage('sprites/gui.png')
 
     blocks = [
@@ -121,19 +122,16 @@ function setup() {
     player = new Player(width / 2, height - 48);
 
     pnt = new Sprite(x, (int)((mouseX + 16 + player.x - width / 2) / 16) * 16, (int)((mouseY) / 16) * 16, blocks[x].width, blocks[x].height)
+
     pnt2 = new Rect((int)((mouseX + 16 + player.x - width / 2) / 16) * 16, (int)((mouseY) / 16) * 16, 16, 16)
 
-
-    qt = new QuadTree(bound, 16, false);
-    qtEnemies = new QuadTree(bound, 16, true);
+    qt = new QuadTree(bound, 16, debug);
+    qtEnemies = new QuadTree(bound, 16, debug);
 
     load11()
     sounds[5].loop()
-
-    // noLoop()
-
     sounds[5].pause()
-
+    noFill()
 }
 
 
@@ -164,21 +162,17 @@ function draw() {
 
     xPos = floor(Math.min(Math.max((-player.x - 8 + width / 2), -3176), -8));
     translate(xPos, 8)
-    // console.log(xPos)
 
-
-
-    // document.getElementById('fps').innerText = floor(frameRate())
     bound.x = -xPos + width / 2
     qtEnemies.batchInsert(enemies)
     qt.batchInsert(allObjects)
     qt.draw()
     rectMode(CORNER);
     if (mouseX < width && mouseY < height) {
-        pnt = new Sprite(x, (int)((mouseX + 16 + player.x - width / 2) / 16) * 16, (int)((mouseY) / 16) * 16, blocks[x].width, blocks[x].height)
-        pnt2 = new Rect((int)((mouseX + 16 + player.x - width / 2) / 16) * 16, (int)((mouseY) / 16) * 16, 16, 16)
+        pnt = new Sprite(x, (int)((-xPos + mouseX)/ 16) * 16, (int)((mouseY) / 16) * 16, blocks[x].width, blocks[x].height)
+        pnt2 = new Rect((int)((-xPos + mouseX) / 16) * 16, (int)((mouseY) / 16) * 16, 16, 16)
         if (x == 19)
-            pnt = new Sprite(x, (int)((mouseX + 16 + player.x - width / 2) / 16) * 16, (int)((mouseY) / 16) * 16, blocks[x].width, blocks[x].height)
+            pnt = new Sprite(x, (int)((-xPos + mouseX)/ 16) * 16, (int)((mouseY) / 16) * 16, blocks[x].width, blocks[x].height)
 
         stroke("green");
         strokeWeight(1);
@@ -200,7 +194,7 @@ function draw() {
         if (mouseY <= height) {
             if (mouseButton === RIGHT) {
 
-                let result = qt.query(new Rect((int)((mouseX + 16 + player.x - width / 2) / 16) * 16, (int)((mouseY) / 16) * 16, 7, 7))
+                let result = qt.query(new Rect((int)((-xPos + mouseX) / 16) * 16, (int)((mouseY) / 16) * 16, 7, 7))
                 if (result != null) {
                     index = allObjects.indexOf(result[0]);
                     if (index > -1) {
@@ -208,7 +202,7 @@ function draw() {
                     }
                 }
 
-                result = qtEnemies.query(new Rect((int)((mouseX + 16 + player.x - width / 2) / 16) * 16, (int)((mouseY) / 16) * 16, 7, 7))
+                result = qtEnemies.query(new Rect((int)((-xPos + mouseX) / 16) * 16, (int)((mouseY) / 16) * 16, 7, 7))
                 if (result != null) {
                     index = enemies.indexOf(result[0]);
                     if (index > -1) {
