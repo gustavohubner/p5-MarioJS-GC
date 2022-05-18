@@ -169,10 +169,10 @@ function draw() {
     qt.draw()
     rectMode(CORNER);
     if (mouseX < width && mouseY < height) {
-        pnt = new Sprite(x, (int)((-xPos + mouseX)/ 16) * 16, (int)((mouseY) / 16) * 16, blocks[x].width, blocks[x].height)
-        pnt2 = new Rect((int)((-xPos + mouseX) / 16) * 16, (int)((mouseY) / 16) * 16, 16, 16)
+        pnt = new Sprite(x, (int)((-xPos + mouseX+8)/ 16) * 16, (int)((mouseY) / 16) * 16, blocks[x].width, blocks[x].height)
+        pnt2 = new Rect((int)((-xPos + mouseX+8) / 16) * 16, (int)((mouseY) / 16) * 16, 16, 16)
         if (x == 19)
-            pnt = new Sprite(x, (int)((-xPos + mouseX)/ 16) * 16, (int)((mouseY) / 16) * 16, blocks[x].width, blocks[x].height)
+            pnt = new Sprite(x, (int)((-xPos + mouseX+8)/ 16) * 16, (int)((mouseY) / 16) * 16, blocks[x].width, blocks[x].height)
 
         stroke("green");
         strokeWeight(1);
@@ -194,7 +194,7 @@ function draw() {
         if (mouseY <= height) {
             if (mouseButton === RIGHT) {
 
-                let result = qt.query(new Rect((int)((-xPos + mouseX) / 16) * 16, (int)((mouseY) / 16) * 16, 7, 7))
+                let result = qt.query(new Rect((int)((-xPos + mouseX+8) / 16) * 16, (int)((mouseY) / 16) * 16, 7, 7))
                 if (result != null) {
                     index = allObjects.indexOf(result[0]);
                     if (index > -1) {
@@ -202,7 +202,7 @@ function draw() {
                     }
                 }
 
-                result = qtEnemies.query(new Rect((int)((-xPos + mouseX) / 16) * 16, (int)((mouseY) / 16) * 16, 7, 7))
+                result = qtEnemies.query(new Rect((int)((-xPos + mouseX+8) / 16) * 16, (int)((mouseY) / 16) * 16, 7, 7))
                 if (result != null) {
                     index = enemies.indexOf(result[0]);
                     if (index > -1) {
@@ -255,14 +255,14 @@ function mouseClicked(event) {
         if (start) {
             if (x == 19) {
                 print('enemy')
-                pnt = new Enemy(x, (int)((mouseX + 16 + player.x - width / 2) / 16) * 16, (int)((mouseY) / 16) * 16, 16, 16)
+                pnt = new Enemy(x, (int)((-xPos + mouseX+8) / 16) * 16, (int)((mouseY) / 16) * 16, 16, 16)
                 enemies.push(pnt)
                 return false
             } else if (x > 8) {
                 print("background")
-                pnt = new BackgroundSprite(x, (int)((mouseX + 16 + player.x - width / 2) / 16) * 16, (int)((mouseY) / 16) * 16, blocks[x].width, blocks[x].height)
+                pnt = new BackgroundSprite(x, (int)((-xPos + mouseX+8) / 16) * 16, (int)((mouseY) / 16) * 16, blocks[x].width, blocks[x].height)
             } else
-                pnt = new Sprite(x, (int)((mouseX + 16 + player.x - width / 2) / 16) * 16, (int)((mouseY) / 16) * 16, blocks[x].width, blocks[x].height)
+                pnt = new Sprite(x, (int)((-xPos + mouseX+8) / 16) * 16, (int)((mouseY) / 16) * 16, blocks[x].width, blocks[x].height)
 
             allObjects.push(pnt);
         }
@@ -327,11 +327,4 @@ let touchControl = {
     left: false,
     right: false,
     up: false
-}
-
-function atualiza() {
-    for (p of allObjects) {
-        if (p.sprite > 7)
-            p.sprite++
-    }
 }
