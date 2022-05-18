@@ -72,10 +72,10 @@ class Player {
             }
 
             if ((keyIsDown(LEFT_ARROW) || touchControl.left) && this.move_l) {
-                if (this.vel.x > 0.1) this.vel.x *= this.breaking 
+                if (this.vel.x > 0.1) this.vel.x *= this.breaking / 1.1
                 else this.applyForce(createVector(-this.accel, 0))
             } else if ((keyIsDown(RIGHT_ARROW) || touchControl.right) && this.move_r) {
-                if (this.vel.x < -0.1) this.vel.x *= this.breaking
+                if (this.vel.x < -0.1) this.vel.x *= this.breaking / 1.1
                 else this.applyForce(createVector(this.accel, 0))
             } else {
                 this.vel.x *= this.breaking
@@ -105,8 +105,6 @@ class Player {
                         player.y = height - 48
                         player.dead = false
                         player.vel = createVector(0, 0)
-
-
                         if (this.lives > 0) {
                             sounds[5].play()
 
@@ -149,6 +147,7 @@ class Player {
                         // colisão acima
                         if (isEnemy) {
                             if (!p.dead)
+
                                 this.die()
                             return
                         } else {
@@ -192,9 +191,11 @@ class Player {
                     // colisão esquerda
                     if (isEnemy) {
                         if (!p.dead) {
-                            this.vel.y = 0
-                            this.die()
-                            this.jump()
+                            if (abs(this.x - p.x) <= 12) {
+                                this.vel.y = 0
+                                this.die()
+                                this.jump()
+                            }
                         }
                         return
                     } else {
@@ -208,9 +209,11 @@ class Player {
                     // colisão direita
                     if (isEnemy) {
                         if (!p.dead) {
-                            this.vel.y = 0
-                            this.die()
-                            this.jump()
+                            if (abs(this.x - p.x) <= 12) {
+                                this.vel.y = 0
+                                this.die()
+                                this.jump()
+                            }
                         }
                         return
                     } else {

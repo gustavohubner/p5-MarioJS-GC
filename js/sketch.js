@@ -20,7 +20,7 @@ let q, question = [], startImg, gui
 
 
 let start = false;
-let pnt, pnt2
+let pnt, pnt2, xPos
 
 function preload() {
     q = loadImage('sprites/questionAnim.png')
@@ -59,6 +59,7 @@ function preload() {
         loadSound('sounds/theme.wav'),
         loadSound('sounds/coin.wav'),
         loadSound('sounds/kick.wav'),
+        loadSound('sounds/stage_clear.wav')
     ]
     mario = loadImage('sprites/marioSheet.png')
 
@@ -137,7 +138,20 @@ function setup() {
 
 
 function draw() {
-
+    if (player.x > 3193) {
+        sounds[5].stop()
+        sounds[8].play()
+        noLoop()
+        setTimeout(function () {
+            start = false; player.x = width / 2;
+            player.y = height - 48;
+            player.dead = false;
+            player.vel = createVector(0, 0); 
+            player.acc = createVector(0, 0); 
+            player.lives = 3
+            loop();
+        }, 8000);
+    }
     background(92, 148, 252);
     if (!start) {
         imageMode(CENTER)
@@ -146,14 +160,15 @@ function draw() {
         return
     }
     blocks[3] = question[floor(frameCount / 8) % 6]
-    translate(floor(-player.x - 8 + width / 2), 8)
+
+    xPos = floor(Math.min(Math.max((-player.x - 8 + width / 2), -3176), -8));
+    translate(xPos, 8)
+    // console.log(xPos)
+
+
 
     // document.getElementById('fps').innerText = floor(frameRate())
-    bound.x = player.x
-    fall = false;
-
-
-
+    bound.x = -xPos + width / 2
     qtEnemies.batchInsert(enemies)
     qt.batchInsert(allObjects)
     qt.draw()
@@ -174,7 +189,7 @@ function draw() {
     player.draw()
 
     imageMode(CENTER)
-    translate(-floor(-player.x - 8 + width / 2), -8)
+    translate(-xPos, -8)
     image(gui, width / 2, height / 2, startImg.width, startImg.height)
 
 
@@ -221,11 +236,6 @@ function draw() {
         touchControl.up = false
 
     }
-
-
-
-    // pop()
-
 }
 
 
