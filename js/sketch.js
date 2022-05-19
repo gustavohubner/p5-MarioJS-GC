@@ -170,17 +170,10 @@ function draw() {
     qt.draw()
     rectMode(CORNER);
     if (mouseX < width && mouseY < height) {
-<<<<<<< Updated upstream
-        pnt = new Sprite(x, (int)((-xPos + mouseX+8)/ 16) * 16, (int)((mouseY) / 16) * 16, blocks[x].width, blocks[x].height)
-        pnt2 = new Rect((int)((-xPos + mouseX+8) / 16) * 16, (int)((mouseY) / 16) * 16, 16, 16)
-        if (x == 19)
-            pnt = new Sprite(x, (int)((-xPos + mouseX+8)/ 16) * 16, (int)((mouseY) / 16) * 16, blocks[x].width, blocks[x].height)
-=======
         pnt = new Sprite(x, (int)((-xPos + mouseX + 8) / 16) * 16, (int)((mouseY) / 16) * 16, blocks[x].width, blocks[x].height)
         pnt2 = new Rect((int)((-xPos + mouseX + 8) / 16) * 16, (int)((mouseY) / 16) * 16, 16, 16)
         if (x == 19)
             pnt = new Sprite(x, (int)((-xPos + mouseX + 8) / 16) * 16, (int)((mouseY) / 16) * 16, blocks[x].width, blocks[x].height)
->>>>>>> Stashed changes
 
         stroke("green");
         strokeWeight(1);
