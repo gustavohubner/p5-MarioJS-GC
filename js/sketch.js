@@ -1,13 +1,15 @@
 let qt;
 let qtEnemies;
-
 let bound
+
+// Objetos
 let allObjects = [];
 let enemies = []
 let player;
 
 let gravity
 
+// Sprites
 let blocks = [];
 let sounds = []
 let mario, marioSprites, goombaSprites
@@ -25,7 +27,6 @@ let pnt, pnt2, xPos
 function preload() {
     q = loadImage('sprites/questionAnim.png')
     startImg = loadImage('sprites/menu.png')
-    // lives =  loadImage('sprites/start.png')
     gui = loadImage('sprites/gui.png')
 
     blocks = [
@@ -118,9 +119,7 @@ function setup() {
     player = new Player(width / 2, height - 48);
 
     pnt = new Sprite(x, (int)((mouseX + 16 + player.x - width / 2) / 16) * 16, (int)((mouseY) / 16) * 16, blocks[x].width, blocks[x].height)
-
     pnt2 = new Rect((int)((mouseX + 16 + player.x - width / 2) / 16) * 16, (int)((mouseY) / 16) * 16, 16, 16)
-
 
     // Quad Tree
     qt = new QuadTree(bound, debug);
@@ -131,7 +130,6 @@ function setup() {
     sounds[5].pause()
     noFill()
 }
-
 
 function draw() {
     if (player.x > 3193) {
@@ -152,7 +150,6 @@ function draw() {
     }
     background(92, 148, 252);
     if ((!start) || (player.lives < 0)) {
-        console.log((!start), (player.lives < 0))
         imageMode(CENTER)
         player.lives = 3
         image(startImg, width / 2, height / 2, startImg.width, startImg.height)
@@ -187,7 +184,6 @@ function draw() {
     imageMode(CENTER)
     translate(-xPos, -8)
     image(gui, width / 2, height / 2, startImg.width, startImg.height)
-
 
     player.update()
 
@@ -245,7 +241,6 @@ function keyPressed() {
             else {
                 loop()
                 if (!player.dead) setTimeout(function () { sounds[5].play() }, 500);
-
             }
         }
     }
@@ -264,7 +259,6 @@ function mouseClicked(event) {
                 pnt = new BackgroundSprite(x, (int)((-xPos + mouseX+8) / 16) * 16, (int)((mouseY) / 16) * 16, blocks[x].width, blocks[x].height)
             } else
                 pnt = new Sprite(x, (int)((-xPos + mouseX+8) / 16) * 16, (int)((mouseY) / 16) * 16, blocks[x].width, blocks[x].height)
-
             allObjects.push(pnt);
         }
     } else {
@@ -276,7 +270,6 @@ function mouseClicked(event) {
             else {
                 loop()
                 if (!player.dead) setTimeout(function () { sounds[5].play() }, 500);
-
             }
         }
     }
@@ -290,7 +283,6 @@ function saveLevel() {
     allObjects.forEach(function (e) {
         out.push([e.x, e.y, e.sprite])
     })
-
     enemies.forEach(function (e) {
         out.push([e.x, e.y, e.sprite])
     })
@@ -301,7 +293,6 @@ function loadLevel(level) {
     allObjects = []
     enemies = []
     arr = JSON.parse(level)
-
     arr.forEach(function (e) {
         if (e[2] == 19) {
             pnt = new Enemy(e[2], (int)(e[0] / 16) * 16, (int)(e[1] / 16) * 16, 16, 16)

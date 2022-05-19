@@ -9,3 +9,8 @@ canvas {
   image-rendering: -moz-crisp-edges !important;;
   image-rendering: crisp-edges !important;;
 }
+
+p {
+  color: white;
+  font-family: 'Courier New', Courier, monospace;
+}

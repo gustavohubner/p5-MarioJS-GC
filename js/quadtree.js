@@ -187,5 +187,3 @@ class QuadTreeNodes {
         return 1
     }
 }
-
-

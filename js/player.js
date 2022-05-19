@@ -3,9 +3,11 @@ class Player {
         // velocity
         this.vel = createVector(0, 0)
         this.acc = createVector(0, 0)
+
         // position
         this.x = x;
         this.y = y;
+
         // movement
         this.move_l = true;
         this.move_r = true;
@@ -13,20 +15,19 @@ class Player {
         this.move_d = true;
 
         this.lives = 0
-
         this.breaking = 0.92
         this.accel = 0.05
+        this.speed = 2.5
 
         this.jumpLock = true
         this.lock = false
         this.dead = false
-        this.speed = 2.5
+
         this.sprite = new MarioSprite(this.x, this.y, 16, 16)
 
         this.range = new Rect(x, y, 17, 17);
         this.mPoint = new Point(x, y) //player
         this.mPoint2 = new Point(x, y - 1) // player jump collider
-        // this.sprite.color = "pink"
     }
 
     draw() {
@@ -40,7 +41,6 @@ class Player {
     }
 
     update() {
-        console.log(this.lives)
 
         if (this.move_d) this.applyForce(gravity)
 
@@ -61,13 +61,10 @@ class Player {
 
         this.checkCollisions(qt)
         this.checkCollisions(qtEnemies)
-
-        // console.log(gravity)
         this.vel.add(this.acc)
         this.acc.set(0, 0)
 
         if (!this.dead) {
-            // console.log(this.vel.x)
             if (keyIsDown(UP_ARROW) || touchControl.up) {
                 this.jump()
             }
@@ -86,9 +83,6 @@ class Player {
                 if (this.vel.x < -this.speed) this.vel.x = -this.speed
             }
         }
-        // if (this.vel.y != 0 && this.vel.y > 5) this.vel.y = 5
-
-        // if (!this.move_d && this.vel.y > 0) this.vel.y = 0
 
         this.x += this.vel.x
         this.y += this.vel.y
@@ -109,7 +103,6 @@ class Player {
                         if (player.lives > 0) {
                             sounds[5].play()
                         } else {
-                            console.log("ORIGEM")
                             start = false
                         }
                         player.lock = false
@@ -121,7 +114,6 @@ class Player {
     }
 
     checkCollisions(qtree) {
-        // console.log(qtree)
         if (!this.dead) {
             let objects = qtree.query(this.range, []);
             if (objects != null) {
@@ -226,20 +218,16 @@ class Player {
             this.y--;
             var jump = createVector(0, -5)
             this.applyForce(jump)
-            // console.log('jump')
             this.jumpLock = true;
             if (!this.dead) setTimeout(function () { sounds[0].play() }, 100);
         }
     }
 
     smallJump() {
-        // if (!this.jumpLock && this.vel.y == 0) {
         this.y--;
         var jump = createVector(0, -2)
         this.applyForce(jump)
-        // console.log('jump')
         this.jumpLock = true;
-        // }
     }
 
     die() {
@@ -254,5 +242,3 @@ class Player {
 
     }
 }
-
-
