@@ -15,7 +15,7 @@ let sounds = []
 let mario, marioSprites, goombaSprites
 
 let x;
-let debug = { value: true, capacity: 6 }
+let debug = { value: false, capacity: 6 }
 let gap;
 
 let q, question = [], startImg, gui, lives
