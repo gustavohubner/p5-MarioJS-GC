@@ -28,6 +28,7 @@ function preload() {
     q = loadImage('sprites/questionAnim.png')
     startImg = loadImage('sprites/menu.png')
     gui = loadImage('sprites/gui.png')
+    gameoverImg = loadImage('sprites/gameover.png')
 
     blocks = [
         loadImage('sprites/block.png'),
@@ -61,7 +62,8 @@ function preload() {
         loadSound('sounds/theme.wav'),
         loadSound('sounds/coin.wav'),
         loadSound('sounds/kick.wav'),
-        loadSound('sounds/stage_clear.wav')
+        loadSound('sounds/stage_clear.wav'),
+        loadSound('sounds/gameover.wav')
     ]
     mario = loadImage('sprites/marioSheet.png')
 }
@@ -149,11 +151,8 @@ function draw() {
         }, 8000);
     }
     background(92, 148, 252);
-    if ((!start) || (player.lives < 0)) {
-        imageMode(CENTER)
-        player.lives = 3
-        image(startImg, width / 2, height / 2, startImg.width, startImg.height)
-        noLoop()
+    if (!start && player.lives > 0) {
+        mainMenu()
         return
     }
     blocks[3] = question[floor(frameCount / 8) % 6]
@@ -191,7 +190,7 @@ function draw() {
         if (mouseY <= height) {
             if (mouseButton === RIGHT) {
 
-                let result = qt.query(new Rect((int)((-xPos + mouseX+8) / 16) * 16, (int)((mouseY) / 16) * 16, 7, 7))
+                let result = qt.query(new Rect((int)((-xPos + mouseX + 8) / 16) * 16, (int)((mouseY) / 16) * 16, 7, 7))
                 if (result != null) {
                     index = allObjects.indexOf(result[0]);
                     if (index > -1) {
@@ -199,7 +198,7 @@ function draw() {
                     }
                 }
 
-                result = qtEnemies.query(new Rect((int)((-xPos + mouseX+8) / 16) * 16, (int)((mouseY) / 16) * 16, 7, 7))
+                result = qtEnemies.query(new Rect((int)((-xPos + mouseX + 8) / 16) * 16, (int)((mouseY) / 16) * 16, 7, 7))
                 if (result != null) {
                     index = enemies.indexOf(result[0]);
                     if (index > -1) {
@@ -209,7 +208,6 @@ function draw() {
             }
         } else {
             start = true
-
             if (mouseX < width / 3) {
                 touchControl.left = true
                 touchControl.right = false
@@ -251,14 +249,14 @@ function mouseClicked(event) {
         if (start) {
             if (x == 19) {
                 print('enemy')
-                pnt = new Enemy(x, (int)((-xPos + mouseX+8) / 16) * 16, (int)((mouseY) / 16) * 16, 16, 16)
+                pnt = new Enemy(x, (int)((-xPos + mouseX + 8) / 16) * 16, (int)((mouseY) / 16) * 16, 16, 16)
                 enemies.push(pnt)
                 return false
             } else if (x > 8) {
                 print("background")
-                pnt = new BackgroundSprite(x, (int)((-xPos + mouseX+8) / 16) * 16, (int)((mouseY) / 16) * 16, blocks[x].width, blocks[x].height)
+                pnt = new BackgroundSprite(x, (int)((-xPos + mouseX + 8) / 16) * 16, (int)((mouseY) / 16) * 16, blocks[x].width, blocks[x].height)
             } else
-                pnt = new Sprite(x, (int)((-xPos + mouseX+8) / 16) * 16, (int)((mouseY) / 16) * 16, blocks[x].width, blocks[x].height)
+                pnt = new Sprite(x, (int)((-xPos + mouseX + 8) / 16) * 16, (int)((mouseY) / 16) * 16, blocks[x].width, blocks[x].height)
             allObjects.push(pnt);
         }
     } else {
@@ -315,8 +313,36 @@ function mouseWheel(event) {
     x = x < 0 ? blocks.length - 1 : x
 }
 
+function gameOver() {
+    noLoop()
+    start= false 
+    imageMode(CENTER)
+    background(0)
+    image(gameoverImg, width / 2, height / 2, startImg.width, startImg.height)
+
+    load11()
+    player.x = width / 2
+    player.y = height - 48
+    player.dead = false
+    player.vel = createVector(0, 0)
+
+    sounds[5].stop()
+    sounds[9].play()
+    setTimeout(function () {player.lock = false; mainMenu(); }, 8000)
+}
+
+function mainMenu() {
+    imageMode(CENTER)
+    noLoop()
+    background(92, 148, 252);
+    image(startImg, width / 2, height / 2, startImg.width, startImg.height)
+    player.lives = 3
+    sounds[5].stop()
+}
+
 let touchControl = {
     left: false,
     right: false,
     up: false
 }
+

@@ -14,7 +14,7 @@ class Player {
         this.move_u = true;
         this.move_d = true;
 
-        this.lives = 0
+        this.lives = 3
         this.breaking = 0.92
         this.accel = 0.05
         this.speed = 2.5
@@ -92,22 +92,6 @@ class Player {
             if (!this.lock) {
                 this.lock = true
                 this.die()
-                setTimeout(
-                    function () {
-                        loop()
-                        load11()
-                        player.x = width / 2
-                        player.y = height - 48
-                        player.dead = false
-                        player.vel = createVector(0, 0)
-                        if (player.lives > 0) {
-                            sounds[5].play()
-                        } else {
-                            start = false
-                        }
-                        player.lock = false
-
-                    }, 4000);
             }
         }
         this.jumpLock = false;
@@ -238,6 +222,26 @@ class Player {
             this.dead = true
             sounds[5].stop()
             sounds[2].play()
+
+            setTimeout(
+                function () {
+                    if (player.lives > 0) {
+                        loop()
+                        load11()
+                        player.x = width / 2
+                        player.y = height - 48
+                        player.dead = false
+                        player.vel = createVector(0, 0)
+                        sounds[5].play()
+                        player.lock = false
+                    } else {
+                        noLoop()
+                        setTimeout(function () { gameOver() }, 100);
+                    }
+
+                }, 4000);
+
+
         }
 
     }
