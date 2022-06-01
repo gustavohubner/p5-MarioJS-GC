@@ -129,6 +129,7 @@ function setup() {
 
     load11()
     sounds[5].loop()
+    sounds[5].amp(0.5)
     sounds[5].pause()
     noFill()
 }
